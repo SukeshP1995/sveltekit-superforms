@@ -48,6 +48,8 @@ import Vine from '@vinejs/vine';
 import { traversePath } from '$lib/traversal.js';
 import { splitPath } from '$lib/stringPath.js';
 import { SchemaError } from '$lib/index.js';
+import { hyperjump } from '$lib/adapters/hyperjump.js';
+import type { JSONSchema } from '$lib/jsonSchema/index.js';
 
 ///// Test data /////////////////////////////////////////////////////
 
@@ -179,6 +181,45 @@ describe('TypeBox', () => {
 	});
 
 	schemaTest(typebox(schema));
+});
+
+describe('Hyperjump', () => {
+	const schema = {
+    "$id": "https://example.com/user-data",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "properties": {
+      "name": { "type": "string", "default": "Unknown" },
+      "email": { 
+				"type": "string", 
+				"format": "email",
+			},
+      "tags": {
+        "type": "array",
+        "minItems": 3,
+        "items": { "type": "string", "minLength": 2 }
+      },
+      "score": { "type": "integer", "minimum": 0 },
+      "date": { "type": "integer", "format": "unix-time" },
+			"nospace": {
+				"pattern": "^\\S*$",
+				"type": "string"
+			},
+			"extra": {
+				"anyOf": [
+					{
+						"type": "string"
+					},
+					{
+						"type": "null"
+					}
+				]
+			}
+    },
+    "required": ["name", "email", "tags", "score", "extra"],
+  } as JSONSchema;
+	
+	schemaTest(hyperjump(schema, {defaults}));
 });
 
 /////////////////////////////////////////////////////////////////////

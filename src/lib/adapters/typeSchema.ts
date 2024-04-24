@@ -5,6 +5,7 @@ import type { BaseSchema, BaseSchemaAsync, Input, Output } from 'valibot';
 import type { Schema as Schema$2, InferType } from 'yup';
 import type { ZodSchema, input, output } from 'zod';
 import type { SchemaTypes, Infer as VineInfer } from '@vinejs/vine/types';
+import type { JSONSchema } from '$lib/jsonSchema/index.js';
 
 /*
 import type { SchemaObject } from 'ajv';
@@ -84,6 +85,10 @@ interface CustomResolver extends Resolver {
 
 interface JoiResolver extends Resolver {
 	base: AnySchema;
+}
+
+interface HyperjumpResolver extends Resolver {
+	base: JSONSchema;
 }
 
 interface TypeBoxResolver extends Resolver {
@@ -166,6 +171,7 @@ type Registry = {
 	yup: YupResolver;
 	zod: ZodResolver;
 	vine: VineResolver;
+	hyperjump: HyperjumpResolver;
 	/*
 		ajv: AjvResolver;
     deepkit: DeepkitResolver;
